@@ -168,3 +168,38 @@ function resetApp() {
   <p>Fitur top up belum aktif. Ini hanya tampilan demo.</p>
   <button type="button" disabled>Top Up belum tersedia</button>
 </section>
+<section style="max-width:420px;margin:24px auto;padding:20px;background:#172554;color:white;border-radius:12px">
+  <h2>Login / Daftar</h2>
+  <input id="auth-email" type="email" placeholder="Email" style="width:100%;padding:10px;margin:6px 0;box-sizing:border-box">
+  <input id="auth-password" type="password" placeholder="Password" style="width:100%;padding:10px;margin:6px 0;box-sizing:border-box">
+  <button id="signup-btn" type="button">Daftar</button>
+  <button id="login-btn" type="button">Login</button>
+  <p id="auth-message"></p>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const SUPABASE_URL = "https://honwogxlcsmxfmjhrxtx.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_Jl39BNBI5n0WL_nYuTQ-kw_fLPwHtl9";
+  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  const emailInput = document.getElementById("auth-email");
+  const passwordInput = document.getElementById("auth-password");
+  const message = document.getElementById("auth-message");
+
+  document.getElementById("signup-btn").addEventListener("click", async () => {
+    const { error } = await supabaseClient.auth.signUp({
+      email: emailInput.value,
+      password: passwordInput.value
+    });
+    message.textContent = error ? error.message : "Pendaftaran dikirim. Cek email untuk konfirmasi.";
+  });
+
+  document.getElementById("login-btn").addEventListener("click", async () => {
+    const { error } = await supabaseClient.auth.signInWithPassword({
+      email: emailInput.value,
+      password: passwordInput.value
+    });
+    message.textContent = error ? error.message : "Login berhasil.";
+  });
+</script>
