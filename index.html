@@ -1,74 +1,24 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>chekgmail.id</title>
-<style>
-body {
-  margin: 0;
-  background: #090b10;
-  color: white;
-  font-family: Arial, sans-serif;
-}
-header {
-  padding: 20px;
-  background: #11151d;
-  color: #38bdf8;
-}
-main {
-  max-width: 700px;
-  margin: auto;
-  padding: 18px;
-}
-.card {
-  background: #12161e;
-  border: 1px solid #2a303a;
-  border-radius: 14px;
-  padding: 18px;
-  margin-bottom: 16px;
-}
-textarea {
-  width: 100%;
-  height: 150px;
-  background: #090b10;
-  color: white;
-  border: 1px solid #303744;
-  border-radius: 10px;
-  padding: 12px;
-  box-sizing: border-box;
-}
-button {
-  width: 100%;
-  padding: 14px;
-  margin-top: 12px;
-  border: 0;
-  border-radius: 9px;
-  background: #1769e8;
-  color: white;
-  font-weight: bold;
-}
-.stats {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-.stat {
-  background: #191d25;
-  border-radius: 10px;
-  padding: 15px;
-}
-.stat strong {
-  display: block;
-  font-size: 24px;
-  color: #38bdf8;
-  margin-top: 8px;
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>chekgmail.id</title>
+  <style>
+    body { margin:0; background:#090b10; color:white; font-family:Arial,sans-serif; }
+    header { padding:20px; background:#11151d; color:#38bdf8; }
+    main { max-width:700px; margin:auto; padding:18px; }
+    .card { background:#12161e; border:1px solid #2a303a; border-radius:14px; padding:18px; margin-bottom:16px; }
+    textarea,input { width:100%; box-sizing:border-box; padding:12px; margin:6px 0; background:#090b10; color:white; border:1px solid #303744; border-radius:9px; }
+    textarea { height:140px; }
+    button { width:100%; padding:13px; margin-top:10px; border:0; border-radius:9px; background:#1769e8; color:white; font-weight:bold; cursor:pointer; }
+    .stats { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .stat { background:#191d25; border-radius:10px; padding:14px; }
+    .stat strong { display:block; font-size:22px; color:#38bdf8; margin-top:8px; }
+    a { color:#38bdf8; }
+  </style>
 </head>
 <body>
-
 <header>
   <h1>chekgmail.id</h1>
   <p>Validasi format email</p>
@@ -78,121 +28,85 @@ button {
   <section class="card">
     <h3>Masukkan daftar email</h3>
     <textarea id="emails" placeholder="Satu email per baris"></textarea>
-    <p>Harga: Rp20/email</p>
-    <p>Total: <strong id="total">Rp0</strong></p>
-    <button onclick="checkEmails()">Mulai Pengecekan</button>
-    <button onclick="resetApp()" style="background:#333">Reset / Baru</button>
+    <p>Total format yang diperiksa: <strong id="total">0</strong></p>
+    <button id="check-btn" type="button">Periksa Format</button>
+    <button id="reset-btn" type="button" style="background:#333">Reset</button>
   </section>
 
   <section class="card">
     <div class="stats">
-      <div class="stat">Total Input<strong id="count">0</strong></div>
-      <div class="stat">Format Valid<strong id="valid">0</strong></div>
-      <div class="stat">Format Tidak Valid<strong id="invalid">0</strong></div>
-      <div class="stat">Biaya<strong id="cost">Rp0</strong></div>
+      <div class="stat">Total input<strong id="count">0</strong></div>
+      <div class="stat">Format valid<strong id="valid">0</strong></div>
+      <div class="stat">Format tidak valid<strong id="invalid">0</strong></div>
     </div>
   </section>
 
   <section class="card">
-    <h3>Hasil Pengecekan</h3>
+    <h3>Hasil</h3>
     <pre id="results">Belum ada hasil.</pre>
   </section>
+
+  <section class="card">
+    <h3>Dashboard Pengguna</h3>
+    <p id="user-email">Belum login</p>
+    <p>Saldo dan top up belum tersedia.</p>
+  </section>
+
+  <section class="card">
+    <h3>Login / Daftar</h3>
+    <input id="auth-email" type="email" placeholder="Email">
+    <input id="auth-password" type="password" placeholder="Password">
+    <button id="signup-btn" type="button">Daftar</button>
+    <button id="login-btn" type="button">Login</button>
+    <p id="auth-message"></p>
+  </section>
 </main>
-
-<script>
-const price = 20;
-const input = document.getElementById("emails");
-
-function rupiah(n) {
-  return "Rp" + n.toLocaleString("id-ID");
-}
-
-input.addEventListener("input", () => {
-  const emails = input.value.split(/\n/).filter(x => x.trim());
-  document.getElementById("total").textContent =
-    rupiah(emails.length * price);
-});
-
-function checkEmails() {
-  const emails = [...new Set(input.value.split(/\n/)
-    .map(x => x.trim()).filter(Boolean))];
-
-  const valid = [];
-  const invalid = [];
-
-  emails.forEach(email => {
-    if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      valid.push(email);
-    } else {
-      invalid.push(email);
-    }
-  });
-
-  document.getElementById("count").textContent = emails.length;
-  document.getElementById("valid").textContent = valid.length;
-  document.getElementById("invalid").textContent = invalid.length;
-  document.getElementById("cost").textContent =
-    rupiah(emails.length * price);
-
-  document.getElementById("results").textContent =
-    "FORMAT VALID\n" + valid.join("\n") +
-    "\n\nFORMAT TIDAK VALID\n" + invalid.join("\n");
-}
-
-function resetApp() {
-  input.value = "";
-  document.getElementById("total").textContent = "Rp0";
-  document.getElementById("count").textContent = "0";
-  document.getElementById("valid").textContent = "0";
-  document.getElementById("invalid").textContent = "0";
-  document.getElementById("cost").textContent = "Rp0";
-  document.getElementById("results").textContent = "Belum ada hasil.";
-}
-</script>
-
-</body>
-</html>
-<nav style="display:flex;gap:12px;justify-content:center;margin:24px 0">
-  <a href="#dashboard">Dashboard Pengguna</a>
-  <a href="#topup">Top Up</a>
-</nav>
-
-<section id="dashboard" style="max-width:600px;margin:20px auto;padding:20px;background:#172554;color:white;border-radius:12px">
-  <h2>Dashboard Pengguna</h2> 
-  <p id="user-email">Belum login</p>
-  <p>Saldo demo: Rp0</p>
-  <p>Status: Akun demo</p>
-</section>
-
-<section id="topup" style="max-width:600px;margin:20px auto;padding:20px;background:#172554;color:white;border-radius:12px">
-  <h2>Top Up</h2>
-  <p>Fitur top up belum aktif. Ini hanya tampilan demo.</p>
-  <button type="button" disabled>Top Up belum tersedia</button>
-</section>
-<section style="max-width:420px;margin:24px auto;padding:20px;background:#172554;color:white;border-radius:12px">
-  <h2>Login / Daftar</h2>
-  <input id="auth-email" type="email" placeholder="Email" style="width:100%;padding:10px;margin:6px 0;box-sizing:border-box">
-  <input id="auth-password" type="password" placeholder="Password" style="width:100%;padding:10px;margin:6px 0;box-sizing:border-box">
-  <button id="signup-btn" type="button">Daftar</button>
-  <button id="login-btn" type="button">Login</button>
-  <p id="auth-message"></p>
-</section>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   const SUPABASE_URL = "https://honwogxlcsmxfmjhrxtx.supabase.co";
   const SUPABASE_KEY = "sb_publishable_Jl39BNBI5n0WL_nYuTQ-kw_fLPwHtl9";
   const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-  supabaseClient.auth.getUser().then(({ data, error }) => {
-  const emailElement = document.getElementById("user-email");
-  if (!error && data.user && emailElement) {
-    emailElement.textContent = "Login sebagai: " + data.user.email;
-  }
-});
-</script>
+
+  const input = document.getElementById("emails");
+
+  document.getElementById("check-btn").addEventListener("click", () => {
+    const emails = [...new Set(input.value.split(/\n/).map(x => x.trim()).filter(Boolean))];
+    const valid = [];
+    const invalid = [];
+
+    emails.forEach(email => {
+      if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) valid.push(email);
+      else invalid.push(email);
+    });
+
+    document.getElementById("count").textContent = emails.length;
+    document.getElementById("valid").textContent = valid.length;
+    document.getElementById("invalid").textContent = invalid.length;
+    document.getElementById("total").textContent = emails.length;
+    document.getElementById("results").textContent =
+      "FORMAT VALID\n" + valid.join("\n") +
+      "\n\nFORMAT TIDAK VALID\n" + invalid.join("\n");
+  });
+
+  document.getElementById("reset-btn").addEventListener("click", () => {
+    input.value = "";
+    document.getElementById("total").textContent = "0";
+    document.getElementById("count").textContent = "0";
+    document.getElementById("valid").textContent = "0";
+    document.getElementById("invalid").textContent = "0";
+    document.getElementById("results").textContent = "Belum ada hasil.";
+  });
+
   const emailInput = document.getElementById("auth-email");
   const passwordInput = document.getElementById("auth-password");
   const message = document.getElementById("auth-message");
+
+  async function showUser() {
+    const { data } = await supabaseClient.auth.getUser();
+    document.getElementById("user-email").textContent =
+      data.user ? "Login sebagai: " + data.user.email : "Belum login";
+  }
 
   document.getElementById("signup-btn").addEventListener("click", async () => {
     const { error } = await supabaseClient.auth.signUp({
@@ -208,5 +122,10 @@ function resetApp() {
       password: passwordInput.value
     });
     message.textContent = error ? error.message : "Login berhasil.";
+    if (!error) await showUser();
   });
+
+  showUser();
 </script>
+</body>
+</html>
