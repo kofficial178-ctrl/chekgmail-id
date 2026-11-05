@@ -158,7 +158,8 @@ function resetApp() {
 </nav>
 
 <section id="dashboard" style="max-width:600px;margin:20px auto;padding:20px;background:#172554;color:white;border-radius:12px">
-  <h2>Dashboard Pengguna</h2>
+  <h2>Dashboard Pengguna</h2> 
+  <p id="user-email">Belum login</p>
   <p>Saldo demo: Rp0</p>
   <p>Status: Akun demo</p>
 </section>
@@ -182,6 +183,12 @@ function resetApp() {
   const SUPABASE_URL = "https://honwogxlcsmxfmjhrxtx.supabase.co";
   const SUPABASE_KEY = "sb_publishable_Jl39BNBI5n0WL_nYuTQ-kw_fLPwHtl9";
   const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  supabaseClient.auth.getUser().then(({ data, error }) => {
+  const emailElement = document.getElementById("user-email");
+  if (!error && data.user && emailElement) {
+    emailElement.textContent = "Login sebagai: " + data.user.email;
+  }
+});
 
   const emailInput = document.getElementById("auth-email");
   const passwordInput = document.getElementById("auth-password");
